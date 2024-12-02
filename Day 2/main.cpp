@@ -1,5 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 
+#include <algorithm>
 #include <cassert>
 #include <cstdbool>
 #include <cstdio>
@@ -75,6 +76,16 @@ static int countSafe(std::vector<std::vector<int>> reports) {
     for (const auto& report : reports) {
         if (isSafe(report)) {
             safe++;
+            continue;
+        }
+
+        for (int i = 0; i < report.size(); i++) {
+            std::vector<int> newReport = report;
+            newReport.erase(newReport.begin() + i);
+            if (isSafe(newReport)) {
+                safe++;
+                break;
+            }
         }
     }
 
