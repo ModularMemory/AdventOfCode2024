@@ -1,5 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
-
 #include <algorithm>
 #include <cassert>
 #include <cstdbool>
@@ -20,10 +18,11 @@ static std::vector<std::vector<int>> getReports(void) {
         std::vector<int> current;
         fgets(buff, 256, fp);
 
-        auto str = strtok(buff, " ");
+        char* context = NULL;
+        auto str = strtok_s(buff, " ", &context);
         while (str) {
             current.push_back(atoi(str));
-            str = strtok(NULL, " ");
+            str = strtok_s(NULL, " ", &context);
         }
 
         current.shrink_to_fit();
