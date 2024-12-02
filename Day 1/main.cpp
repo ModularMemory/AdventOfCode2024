@@ -44,12 +44,11 @@ int main(void) {
     int sum = 0;
     int similarity = 0;
     for (int i = IDS_LEN - 1; i >= 0; i--) {
-        int a = ids1[i];
-        int b = ids2[i];
+        int idA = ids1[i];
+        int idB = ids2[i];
 
-        int dist = std::abs(a - b);
-        sum += dist;
-        similarity += a * ids2Occurences[a];
+        sum += std::abs(idA - idB);
+        similarity += idA * ids2Occurences[idA];
     }
 
     // print results
