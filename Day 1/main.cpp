@@ -1,8 +1,8 @@
 #include <map>
 #include <cassert>
 #include <cmath>
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
 constexpr auto IDS_LEN = 1000;
 constexpr auto IDS_FILENAME = "inputs.txt";
