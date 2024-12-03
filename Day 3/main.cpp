@@ -12,7 +12,7 @@ using namespace std;
 constexpr auto INPUT_FILENAME = "inputs.txt";
 
 int main(void) {
-    auto reg = regex{ R"(mul\((\d+),(\d+)\))" };
+    auto reg = regex{ R"((?:mul\((\d+),(\d+)\)|do\(\)|don't\(\)))" };
 
     auto ifs = ifstream(INPUT_FILENAME);
     auto str = string((istreambuf_iterator<char>(ifs)), istreambuf_iterator<char>());
@@ -21,8 +21,23 @@ int main(void) {
     auto rit_end = sregex_iterator();
 
     int sum = 0;
+    bool enabled = true;
     for (; rit != rit_end; rit++) {
-        auto match = *rit;
+        auto& match = *rit;
+
+        if (match.str().rfind("don't()") == 0) {
+            enabled = false;
+            continue;
+        }
+
+        if (match.str().rfind("do()") == 0) {
+            enabled = true;
+            continue;
+        }
+
+        if (!enabled) {
+            continue;
+        }
 
         int a = stoi(match[1].str());
         int b = stoi(match[2].str());
