@@ -12,25 +12,24 @@ using namespace std;
 constexpr auto INPUT_FILENAME = "inputs.txt";
 
 int main(void) {
-    auto reg = regex{ R"((?:mul\((\d+),(\d+)\)|do\(\)|don't\(\)))" };
-
     auto ifs = ifstream(INPUT_FILENAME);
-    auto str = string((istreambuf_iterator<char>(ifs)), istreambuf_iterator<char>());
+    auto input = string(istreambuf_iterator<char>(ifs), istreambuf_iterator<char>());
 
-    auto rit = sregex_iterator (str.begin(), str.end(), reg);
+    auto reg = regex(R"((?:mul\((\d+),(\d+)\)|do\(\)|don't\(\)))");
+    auto rit = sregex_iterator (input.begin(), input.end(), reg);
     auto rit_end = sregex_iterator();
 
-    int sum = 0;
-    bool enabled = true;
+    auto sum = 0;
+    auto enabled = true;
     for (; rit != rit_end; rit++) {
         auto& match = *rit;
 
-        if (match.str().rfind("don't()") == 0) {
+        if (match.str().rfind("don't()", 0) == 0) {
             enabled = false;
             continue;
         }
 
-        if (match.str().rfind("do()") == 0) {
+        if (match.str().rfind("do()", 0) == 0) {
             enabled = true;
             continue;
         }
