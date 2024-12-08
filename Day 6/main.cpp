@@ -54,71 +54,95 @@ static point find_start(vector<string>& lines) {
     return point(0, 0);
 }
 
-static bool up(vector<string>& lines, point& pos, set<point>& positions) {
+static bool up(vector<string>& lines, point& pos) {
     for (int y = pos.Y; y >= 0; y--) {
         if (lines[y][pos.X] == '#') {
             return true;
         }
 
         pos.Y = y;
-        positions.insert(pos);
     }
 
     return false;
 }
 
-static bool right(vector<string>& lines, point& pos, set<point>& positions) {
+static bool right(vector<string>& lines, point& pos) {
     for (int x = pos.X; x < lines[pos.Y].size(); x++) {
         if (lines[pos.Y][x] == '#') {
             return true;
         }
 
         pos.X = x;
-        positions.insert(pos);
     }
 
     return false;
 }
 
-static bool down(vector<string>& lines, point& pos, set<point>& positions) {
+static bool down(vector<string>& lines, point& pos) {
     for (int y = pos.Y; y < lines.size(); y++) {
         if (lines[y][pos.X] == '#') {
             return true;
         }
 
         pos.Y = y;
-        positions.insert(pos);
     }
 
     return false;
 }
 
-static bool left(vector<string>& lines, point& pos, set<point>& positions) {
+static bool left(vector<string>& lines, point& pos) {
     for (int x = pos.X; x >= 0; x--) {
         if (lines[pos.Y][x] == '#') {
             return true;
         }
 
         pos.X = x;
-        positions.insert(pos);
     }
 
     return false;
 }
 
-static void print_path(vector<string>& lines, set<point>& positions) {
-    for (auto y = 0; y < lines.size(); y++) {
-        for (auto x = 0; x < lines[y].size(); x++) {
-            if (positions.find(point(x, y)) != positions.end()) {
-                cout << '#';
-            }
-            else {
-                cout << '.';
-            }
+static bool detect_loop(vector<string>& lines, point start) {
+    auto uPos = set<point>();
+    auto rPos = set<point>();
+    auto dPos = set<point>();
+    auto lPos = set<point>();
+    auto pos = start;
+    while (true) {
+        if (!up(lines, pos)) {
+            break;
         }
 
-        cout << '\n';
+        if (!uPos.insert(pos).second) {
+            return true;
+        }
+
+        if (!right(lines, pos)) {
+            break;
+        }
+
+        if (!rPos.insert(pos).second) {
+            return true;
+        }
+
+        if (!down(lines, pos)) {
+            break;
+        }
+
+        if (!dPos.insert(pos).second) {
+            return true;
+        }
+
+        if (!left(lines, pos)) {
+            break;
+        }
+
+        if (!lPos.insert(pos).second) {
+            return true;
+        }
     }
+
+    return false;
 }
 
 int main(void) {
@@ -132,29 +156,23 @@ int main(void) {
         return 1;
     }
 
-    auto positions = set<point>();
-    auto pos = start;
-    while (true) {
-        if (!up(lines, pos, positions)) {
-            break;
-        }
+    auto loops = 0;
+    for (auto y = 0; y < lines.size(); y++) {
+        for (auto x = 0; x < lines[y].size(); x++) {
+            if (lines[y][x] != '.') {
+                continue;
+            }
 
-        if (!right(lines, pos, positions)) {
-            break;
-        }
+            lines[y][x] = '#';
+            if (detect_loop(lines, start)) {
+                loops++;
+            }
 
-        if (!down(lines, pos, positions)) {
-            break;
-        }
-
-        if (!left(lines, pos, positions)) {
-            break;
+            lines[y][x] = '.';
         }
     }
 
-    cout << positions.size() << endl;
-
-    //print_path(lines, positions);
+    cout << loops << endl;
 
     return 0;
 }
