@@ -5,6 +5,7 @@
 
 using namespace std;
 
+using i32 = int;
 using u64 = unsigned long long;
 
 static int prase_int(char c) {
@@ -16,12 +17,12 @@ static int prase_int(char c) {
     exit(1);
 }
 
-static vector<u64> get_disk() {
+static vector<i32> get_disk() {
     auto ifs = ifstream("inputs.txt");
     auto input = string(istreambuf_iterator<char>(ifs), istreambuf_iterator<char>());
 
-    auto disk = vector<u64>();
-    auto id = 0ULL;
+    auto disk = vector<i32>();
+    auto id = 0;
     for (auto i = 0ULL; i < input.size(); i++) {
         auto count = prase_int(input[i]);
         if (i % 2 != 0) {
@@ -40,7 +41,7 @@ static vector<u64> get_disk() {
     return disk;
 }
 
-static u64 part1(const vector<u64> disk) {
+static u64 part1(const vector<i32> disk) {
     auto start = 0ULL;
     auto end = disk.size() - 1;
     auto checksum = 0ULL;
